@@ -319,7 +319,8 @@ WHERE e1.hire_date < e2.hire_date AND e1.salary < e2.salary;
 -- last_name 에 u가 포함된 사원들과 동일 부서에 근무하는 사원들의 사번, last_name 조회
 SELECT employee_id, last_name
 FROM employees
-WHERE department_id in (SELECT department_id FROM employees WHERE last_name like '%u%');
+WHERE department_id in (SELECT distinct department_id FROM employees WHERE last_name like '%u%')
+ORDER BY employee_id;
 
 -- job_id 가 SA_MAN 인 사원들의 최대 연봉보다 높게 받는 사원들의 last_name, job_id, salary 조회
 SELECT last_name, job_id, salary
@@ -329,20 +330,27 @@ WHERE salary > (SELECT max(salary) FROM employees WHERE job_id = 'SA_MAN');
 -- 커미션을 버는 사원들의 부서와 연봉이 동일한 사원들의 last_name, department_id, salary 조회
 SELECT last_name, department_id, salary
 FROM employees
-WHERE department_id in (SELECT department_id FROM employees WHERE commission_pct is not null);
+WHERE (department_id ,salary) in (SELECT department_id, salary FROM employees WHERE commission_pct > 0);
 
 -- 회사 전체 평균 연봉보다 더 받는 사원들 중 last_name에 u가 있는 사원들이 근무하는 부서에서
 -- 근무하는 사원들의 employee_id, last_name, salary 조회
+--SELECT employee_id, last_name, salary
+--FROM employees e1, employees e2
+--WHERE e1.employee_id = e2.employee_id and (SELECT distinct e1.department_id FROM employees WHERE salary) > (SELECT round(avg(salary),0) FROM employees)
+--        and last_name like '%u%';
+        
 SELECT employee_id, last_name, salary
-FROM employees
-WHERE last_name like '%u%' and salary > (SELECT avg(salary) FROM employees); 
+FROM (SELECT distinct department_id FROM employees WHERE salary > (SELECT round(avg(salary),0) FROM employees)
+        and last_name like '%u%') dept, employees e
+WHERE e.department_id = dept.department_id order by employee_id;
 
 -- last_name 이 Davies 인 사람보다 나중에 고용된 사원들의 last_name, hire_date 조회
 SELECT last_name, hire_date
 FROM employees
-WHERE hire_date < (SELECT hire_date FROM employees WHERE last_name = 'Davies');
+WHERE hire_date > (SELECT hire_date FROM employees WHERE last_name = 'Davies');
 
 -- last_name 이 King 인 사원을 매니저로 두고 있는 모든 사원들의 last_name, salary 조회
+-- last_name 이 King 인 사원이 1명이 아니었으면 in 대신에 = 을 써도됨.
 SELECT last_name, salary
 FROM employees
 WHERE manager_id in (SELECT employee_id FROM employees WHERE last_name = 'King');
