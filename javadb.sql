@@ -35,7 +35,7 @@ SELECT * FROM usertbl WHERE username like '_길동%';
 
 --delete from 테이블명 where 조건
 
--- 시퀀스 생성
+-- 시퀀스 생성 ㅇㅇㅇㅇ
 -- user_seq 생성(기본)
 CREATE SEQUENCE user_seq;
 
