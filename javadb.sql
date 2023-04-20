@@ -12,6 +12,29 @@ CREATE TABLE userTBL(
         );
         
 drop table userTBL;
+
+-- select(+서브쿼리,조인) + DML(insert,delete,update)
+-- 전체조회
+SELECT * FROM usertbl;
+-- 개별조회(특정번호, 특정이름...)
+-- 여러행이 나오는 상태냐? 아니면 하나의 행이 결과로 나올것이냐?
+SELECT * FROM usertbl WHERE no=1;
+SELECT * FROM usertbl WHERE username='홍길동';
+
+-- like : _ or % <== 여러행 결과로 나옴
+SELECT * FROM usertbl WHERE username like '_길동%';
+
+--insert into 테이블명(필드명1,필드명2...)
+--values();
+
+--update 테이블명
+--set 업데이트할 필드명=값, 업데이트할 필드명=값,.......
+--where 조건;
+
+--delete 테이블명 where 조건
+
+--delete from 테이블명 where 조건
+
 -- 시퀀스 생성
 -- user_seq 생성(기본)
 CREATE SEQUENCE user_seq;
